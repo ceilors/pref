@@ -20,8 +20,10 @@
 * Game:
   - /game/new
   - /game/pending
-  - /game/id/invite/hash
+  - /game/current
+  - /game/id/invite/user_id
   - /game/id/join
+  - /game/id/join/hash
   - /game/id/leave
   - /game/id/players
   - /game/id/start
