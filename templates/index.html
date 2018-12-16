@@ -2,11 +2,24 @@
 
 {% block body %}
     <div class="left-panel">
-        <div class="current"></div>
-        <div class="recent"></div>
-        <div class="pending"></div>
+        <ul class="current"></ul>
+        <ul class="pending"></ul>
     </div>
     <div class="main">
-        
+        <div class="loading">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </div>
     </div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script>
+        $(window).load(function() {
+            if (typeof _Game == 'undefined') throw new Error('No game script exists');
+            _Game.set('current', '{{ url_for('game.current') }}');
+            _Game.set('pending', '{{ url_for('game.pending') }}');
+
+        });
+    </script>
 {% endblock %}
