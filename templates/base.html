@@ -1,0 +1,18 @@
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>{{ page_title }}</title>
+        {% block extra_css %}{% endblock %}
+    </head>
+    <body>
+        <header class="page-header">{% include 'header.html' %}</header>
+        <div class="container">
+            {% block body %}{% endblock %}
+        </div>
+        {% block footer %}{% endblock %}
+        <script src="{{ url_for('static', filename='lib/jquery-3.3.1.min.js') }}"></script>
+        {% block extra_js %}{% endblock %}
+    </body>
+</html>
