@@ -1,33 +1,17 @@
-Game = function() {
-    var self = this;
-
-    this.games = {
-        current: [],
-        pending: []
-    };
-
-    var load_data = function(url) {
-        var data = {};
-
-        $.get(url).done(function(d) {
-            data = JSON.parse(d);
-        });
-        return data;
-    }
-
-    this.set = function(param, url) {
-        var data = load_data(url);
-        switch (param) {
-            case 'current':
-                this.games.current = data;
-                break;
-            case 'pending':
-                this.games.pending = data;
-                break;
-            default:
-                break;
+// if Game is undefined than user is not authorized
+(function(){
+    angular.module('prefApp', [])
+    .controller('prefController', ['$scope', '$log',
+        function($scope, $log) {
+            $ = angular.element;
+            $scope.gameInit = function() {
+                document.getElementById('loading').remove();
+                if (typeof Game === 'object') {
+                    $log.debug('Game is initialized');
+                } else {
+                    $log.debug('Game is not initialized');
+                }
+            }
         }
-    };
-};
-
-_Game = new Game();
+    ]);
+}());
