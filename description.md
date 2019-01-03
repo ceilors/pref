@@ -3,7 +3,7 @@
 * присоединиться к существующей неначатой игре
 
 После присоединения к игре:
-* если 3 ил 4 игрока присоединились к игре, то если все сообщили, что готовы, то игра начинается
+* если 3 или 4 игрока присоединились к игре, то когда все сообщили, что готовы, игра начинается
 
 Описание API:
 
@@ -13,28 +13,27 @@
   - /logout
 
 * User:
-  - /user/user_id/invites
-  - /user/user_id/stats
-  - /user/user_id
+  - /user/user_id/invites - список открытых приглашений
+  - /user/user_id/stats - статистика
+  - /user/user_id - профиль
 
 * Game:
-  - /game/new
-  - /game/pending
-  - /game/current
-  - /game/id/invite/user_id
-  - /game/id/join
+  - /game/new - создание игры
+  - /game/pending - список неначатых игр для игрока
+  - /game/current - список текущих игр, к которым присоединился игрок
+  - /game/id/invite/user_id - пригласить игрока user_id в игру
+  - /game/id/join - присоединиться к игре
   - /game/id/join/hash
-  - /game/id/leave
-  - /game/id/players
-  - /game/id/start
-  - /game/id/close
-  - /game/id/state
-  - /game/id/contract
-  - /game/id/move
-  - /game/id/finish
+  - /game/id/leave - покинуть игру
+  - /game/id/players - список игроков + статус игры
+  - /game/id/start - начать игру
+  - /game/id/close - отменить игру
+  - /game/id/state - состояние (список карт на руках) игры
+  - /game/id/contract - объявленный контракт
+  - /game/id/move - сделать ход
+  - /game/id/finish - закончить игру
 
 
 В базе хранится:
   - таблица пользователей (друзья)
   - таблица игр (конечное состояние игры)
-

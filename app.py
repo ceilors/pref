@@ -11,6 +11,18 @@ app = Flask(__name__)
 app.register_blueprint(users, url_prefix='/user')
 app.register_blueprint(games, url_prefix='/game')
 
+@app.before_request
+def load_logged_in_user():
+    """If a user id is stored in the session, load the user object from
+    the database into ``g.user``."""
+    user_id = session.get('user_id')
+
+    if user_id is None:
+        g.user = None
+    else:
+        g.user = { 'id': 0 }
+        #g.user = User.query.filter_by(id=user_id).first()
+
 @app.route('/')
 def index():
     return render_template('index.html')

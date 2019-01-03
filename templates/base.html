@@ -1,19 +1,25 @@
-<html lang="ru">
+<html lang="ru" data-ng-app="prefApp">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>{{ page_title }}</title>
+        <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
+        {% if g.user %}
+            <script>var Game = {}; Game.User = { id: g.user.id, name: g.user.name };</script>
+        {% endif %}
+        <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='font/fira.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='font/fontawesome.css') }}">
         {% block extra_css %}{% endblock %}
     </head>
-    <body>
-        <header class="page-header">{% include 'header.html' %}</header>
-        <div class="container">
+    <body data-ng-controller="prefController" data-ng-init="gameInit()">
+        <header id="page-header">{% include 'header.html' %}</header>
+        <div id="container">
             {% block body %}{% endblock %}
         </div>
         {% block footer %}{% endblock %}
-        <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/game.js') }}"></script>
         {% block extra_js %}{% endblock %}
     </body>
 </html>
