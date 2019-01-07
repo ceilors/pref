@@ -30,7 +30,7 @@ interface String { format(...args: any[]): string; } // extend string prototype 
             // custom buttons are stored like
             custom: JQuery[];
         };
-        parent: popup;
+        width: string | number = 0;
 
         append(html: string) { (<JQuery>this.content).append(html); return this; };
         prepend(html: string) { (<JQuery>this.content).prepend(html); return this; };
@@ -60,10 +60,10 @@ interface String { format(...args: any[]): string; } // extend string prototype 
             return this;
         };
         show(width?: string | number) {
-            width = width || 600;
-            (<JQuery>this.content).css({ width: width });
-            this.overlay.stop().show().animate({ opacity: .5 });
-            this.centerize().window.show();
+            this.width = width || this.width || 450;
+            (<JQuery>this.content).css({ width: this.width });
+            this.overlay.stop().show().animate({ opacity: .5 }, 200);
+            this.centerize().window.fadeIn(200);
             return this;
         };
         hide(callback?: Function) {
@@ -91,8 +91,8 @@ interface String { format(...args: any[]): string; } // extend string prototype 
         constructor() {
             let self = this;
             let id: number = document.querySelectorAll('.popup').length;
-            this.overlay = $('<div class="overlay" for="popup-{0}"></div>'.format(id));
-            this.window = $('<div class="popup" id="popup-{0}"></div>'.format(id));
+            this.overlay = $('<div class="popup-overlay" for="popup-{0}"></div>'.format(id));
+            this.window = $('<div class="popup-window" id="popup-{0}"></div>'.format(id));
             $(document.body).append(this.overlay).append(this.window);
 
             this.window[0].innerHTML =
@@ -100,11 +100,11 @@ interface String { format(...args: any[]): string; } // extend string prototype 
                 '<div class="popup-actions"><a href="#" class="popup-close"><i class="fas fa-times"></i></a></div>' +
                 '</div><div class="popup-body"><form action="" method="post" enctype="multipart/form-data">' +
                 '<div class="popup-content"></div><div class="popup-buttons">' +
-                '<input type="submit" value="Ok" class="popup-button confirm">' +
-                '<input type="button" value="Close" class="popup-button cancel"></div></form></div>';
+                '<button type="submit" class="popup-button confirm">Ok</button>' +
+                '<button type="cancel" class="popup-button cancel">Close</button></div></form></div>';
 
             this.window.find('.popup-close, .popup-button.cancel').click(function(e) { self.hide(); return false; });
-            this.window.data('popup', this);
+            this.window.data('popup', this).css({ display: 'none' });
 
             Object.defineProperties(this, {
                 'title': {
@@ -121,7 +121,7 @@ interface String { format(...args: any[]): string; } // extend string prototype 
                 custom: [],
                 node: <JQuery>$(self.window[0].querySelector('.popup-buttons')),
                 confirm: function(text?: string | Function, onclick?: Function) {
-                    if (typeof text == 'string') { this.confirm().val(text); }
+                    if (typeof text == 'string') { this.confirm().html(text); }
                     else if (typeof text == 'function') {
                         this.confirm().off('click')
                                       .on('click', (e: JQueryEventObject) => text);
@@ -133,7 +133,7 @@ interface String { format(...args: any[]): string; } // extend string prototype 
                     return <JQuery>$(this.node.children('.confirm'));
                 },
                 cancel: function(text?: string | Function, onclick?: Function) {
-                    if (typeof text == 'string') { this.cancel().filter('.cancel').val(text); }
+                    if (typeof text == 'string') { this.cancel().filter('.cancel').html(text); }
                     else if (typeof text == 'function') {
                         this.cancel().off('click')
                                      .on('click', (e: JQueryEventObject) => text);
@@ -142,13 +142,12 @@ interface String { format(...args: any[]): string; } // extend string prototype 
                         this.cancel().off('click')
                                      .on('click', (e: JQueryEventObject) => onclick);
                     }
-                    return <JQuery>this.node.children('.confirm')
+                    return <JQuery>this.node.children('.cancel')
                         .add(self.window[0].querySelector('.popup-close'));
                 },
                 add: function(text?: string, onclick?: Function) {
                     var next = this.node.children('.btn-custom').length;
-                    var btn = $('<input type="button" value="{0}" '.format(text) +
-                        'class="popup-button btn-custom" id="btn-{1}" />'.format(next));
+                    var btn = $('<button class="popup-button btn-custom" id="btn-{1}">{0}</button>'.format(text, next));
                     this.node.prepend(btn);
                     btn.on('click', (e: JQueryEventObject) => onclick);
                     this.custom.push(btn);
@@ -164,12 +163,25 @@ interface String { format(...args: any[]): string; } // extend string prototype 
                 let loading = document.getElementById('loading');
                 if (loading != null) loading.remove();
 
-                if (typeof Game === 'object') {
+                if (typeof Game.User !== null) {
                     $log.debug('Game is initialized');
                 } else {
                     $log.debug('Game is not initialized');
-                    var d = new popup();
-                    $log.debug(d);
+                    // show auth popup
+                    let p = new popup();
+                    p.title = 'Log in or sign up to continue';
+                    p.append(`<div class="input-group">
+                        <label>Username/E-mail</label>
+                        <input type="text" name="username" /></div>`);
+                        p.append(`<div class="input-group">
+                        <label>Password</label>
+                        <input type="password" name="password" /></div>`);
+                    (<JQuery>p.content).css({ 'text-align': 'right' });
+                    p.form('action', )
+                    p.buttons.confirm('Log in <i class="fas fa-sign-in-alt"></i>').addClass('blue');
+                    p.buttons.cancel('Sign up <i class="fas fa-user-plus"></i>').addClass('red')
+                        .filter('.popup-close').remove();
+                    p.show(400);
                 }
             }
         }

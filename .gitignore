@@ -2,3 +2,4 @@
 Pipfile.lock
 runapp
 .vscode
+static/js/node_modules

@@ -1,20 +1,37 @@
+/* custom colors */
+// header
 $header-background: #00519c;
 $header-color: #fff;
 
+// base
+$base-color: #333;
+$link-color: $header-background;
+$link-visited: darken($header-background, 2.5%);
+$light-background-alt: #f7f7f7;
+$base-border: #bbb;
+
+// other definitions
+$danger-color: #d10000;
+
+/* custom widths & heights */
 $header-height: 80px;
 $header-shrink-height: 40px;
 
 $leftpane-width: 150px;
 $leftpane-shrink-width: 50px;
 
+/* mixins */
 @mixin transform-center {
+    position: relative;
     transform: translateY(-50%);
     top: 50%;
 }
 
-.blurred { filter: blur(3px); }
+/* common classes */
+.pull-right { float: right; }
 
 
+/* ----------- main styles ----------- */
 body, html {
     margin: 0;
     padding: 0;
@@ -22,8 +39,110 @@ body, html {
     height: 100%;
     font-family: 'Fira Sans', Helvetica, Arial, sans-serif;
     font-size: 16px;
+    color: $base-color;
 }
 
+.popup-window {
+    position: absolute;
+    z-index: 101;
+    box-shadow: 0 0 5px 2px #aaa;
+    border-radius: 4px;
+    border: 1px solid #00043f;
+    padding: 0; margin: 0;
+
+    .popup-header {
+        padding: 4px 0;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom: 1px solid $base-border;
+        font-size: 1.2rem;
+        line-height: 1.5;
+        white-space: nowrap;
+        position: relative;
+        background: $light-background-alt;
+
+        .popup-title {
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: absolute;
+            left: 0.5rem;
+            right: 0.5rem;
+            z-index: 1;
+        }
+        .popup-actions {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            z-index: 2;
+            &, & a { color: $base-color; }
+        }
+    }
+    .popup-body {
+        overflow: auto;
+        position: relative;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        padding: 0; margin: 0;
+
+        form { padding: 0; margin: 0; }
+
+        .popup-content {
+            border-bottom: 1px solid $base-border;
+            padding: 1rem 0.5rem;
+
+            .input-group {
+                display: block;
+                margin-bottom: 0.5rem;
+                position: relative;
+                overflow: hidden;
+
+                $label-width: 150px;
+                label {
+                    @include transform-center();
+                    width: $label-width;
+                    text-align: right;
+                    display: block;
+                    position: absolute;
+                }
+                input {
+                    width: calc(100% - #{$label-width} - 1.5rem);
+                }
+            }
+        }
+        .popup-buttons {
+            background: $light-background-alt;
+            padding: 0.5rem;
+            vertical-align: middle;
+            text-align: right;
+
+            .popup-button {
+                padding: 0.25rem 0.5rem;
+                margin-right: 0.5rem;
+                border-radius: 4px;
+                border: 1px solid $base-border;
+
+                &.blue {
+                    background-color: $link-color;
+                    border: 1px solid darken($link-color, 2.5%);
+                    color: $header-color;
+                }
+                &.red {
+                    background-color: $danger-color;
+                    border: 1px solid darken($danger-color, 2.5%);
+                    color: $header-color;
+                }
+            }
+        }
+    }
+}
+.popup-overlay {
+    background: #fff;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 100;
+    opacity: 0;
+}
 
 #page-header {
     height: $header-height;
@@ -58,7 +177,6 @@ body, html {
 
     .logo, .auth {
         @include transform-center();
-        position: relative;
     }
 
     .logo {
@@ -88,6 +206,11 @@ body, html {
     z-index: 1;
     margin: 0; padding: 0;
 
+    a {
+        color: $link-color;
+        &:visited { color: $link-visited; }
+    }
+
     #page-header.shrink + & { margin-top: $header-shrink-height; }
 
     #left-panel {
@@ -113,8 +236,8 @@ body, html {
         }
 
         #loading {
-            position: absolute;
             @include transform-center();
+            position: absolute;
             text-align: center;
             right: 0; left: -$leftpane-width;
             font-size: 2rem;
